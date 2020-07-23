@@ -15,8 +15,15 @@ spec:
       containers:
         - name: auth
           image: docker387/auth
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
 
 ---
+# clusterIP
 
 apiVersion: v1
 kind: Service
