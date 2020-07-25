@@ -1,8 +1,7 @@
 import express, {Request, Response} from 'express'
 import { body } from 'express-validator'
 import jwt from 'jsonwebtoken'
-import { validateRequest } from '../middlewares/validate_request'
-import {BadRequestError} from '../errors/bad_request_error'
+import {validateRequest, BadRequestError} from '@ac-tickets/common'
 import { User } from '../models/user'
 
 const router = express.Router();
