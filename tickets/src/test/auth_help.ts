@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import mongoose from 'mongoose'
 
 //Manually build the cookie
 export const fakeSignin = (email: string, id: string)=>{
@@ -17,5 +18,10 @@ export const fakeSignin = (email: string, id: string)=>{
 
   //Return a string thats the cookie with the encoded data
   return [`express:sess=${base64}`]
+}
+
+// A Random Mongoose object Id
+export const generateObjectId = ()=>{
+  return new mongoose.Types.ObjectId().toHexString()
 }
 

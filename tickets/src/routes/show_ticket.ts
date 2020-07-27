@@ -1,6 +1,5 @@
 import express, {Request, Response} from 'express'
-import { requiereAuth, validateRequest, NotFoundError} from '@ac-tickets/common'
-import {body} from 'express-validator'
+import { NotFoundError} from '@ac-tickets/common'
 import { Ticket } from '../models/ticket'
 
 const router = express.Router()
@@ -12,14 +11,15 @@ router.get('/api/tickets/:id',
  )=>{
    let ticket;
    try {
-      ticket = await Ticket.findById(req.params.id)
-   } catch (error) {
-      throw new NotFoundError()
+    ticket = await Ticket.findById(req.params.id)
+   } catch (err) {
+    console.log(err)
    }
+   
    if(!ticket){
       throw new NotFoundError()
    }
-  res.send(ticket)
+   res.send(ticket)
  })
 
 

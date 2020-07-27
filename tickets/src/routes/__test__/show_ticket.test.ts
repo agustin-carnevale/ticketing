@@ -1,14 +1,15 @@
 import request from 'supertest'
 import { app } from '../../app'
-import { fakeSignin } from '../../test/auth_help'
-import { Ticket } from '../../models/ticket'
+import { fakeSignin, generateObjectId } from '../../test/auth_help'
 
 const testEmail = 'test@test.com'
 const testId = '1DFD45G9C'
 
 it('returns a 404 if ticket is not found', async ()=>{
+  const id = generateObjectId()
+  
   await request(app)
-    .get('/api/tickets/kdlsnfjsfkddj')
+    .get(`/api/tickets/${id}`)
     .set('Cookie', fakeSignin(testEmail, testId))
     .send({})
     .expect(404)
