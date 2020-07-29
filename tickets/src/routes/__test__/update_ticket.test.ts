@@ -1,6 +1,7 @@
 import request from 'supertest'
 import { app } from '../../app'
 import { fakeSignin, generateObjectId} from '../../test/auth_help'
+import { natsWrapper } from '../../nats_wrapper'
 
 const testEmail = 'test@test.com'
 const testId = generateObjectId()
@@ -104,3 +105,24 @@ it('updates the ticket provided valid inputs', async ()=>{
   expect(ticketResponse.body.title).toEqual(newTitle)
   expect(ticketResponse.body.price).toEqual(newPrice)
 })
+
+
+it('publishes an event of ticket:updated', async ()=>{
+  //create ticket with one user
+  const res = await createTicket('concert', 40)
+
+  const newTitle = 'New Title'
+  const newPrice = 25
+
+  await request(app)
+  .put(`/api/tickets/${res.body.id}`)
+  .set('Cookie', fakeSignin(testEmail, testId))
+  .send({
+    title: newTitle,
+    price: newPrice
+  })
+  .expect(200)
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled()
+})
+
