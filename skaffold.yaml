@@ -32,3 +32,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: docker387/orders
+      context: orders
+      docker:
+        dockerfile: dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
