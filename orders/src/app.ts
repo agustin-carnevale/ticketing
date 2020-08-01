@@ -7,7 +7,7 @@ import cookieSession from 'cookie-session'
 import {ordersRouter} from './routes/orders'
 import {createOrderRouter} from './routes/create_order'
 import {showOrderRouter} from './routes/show_order'
-import {deleteOrderRouter} from './routes/delete_order'
+import {cancelOrderRouter} from './routes/cancel_order'
 
 // Middlewares, Errors
 import {errorHandler, NotFoundError, currentUser} from '@ac-tickets/common'
@@ -26,7 +26,7 @@ app.use(currentUser)
 app.use(ordersRouter)
 app.use(createOrderRouter)
 app.use(showOrderRouter)
-app.use(deleteOrderRouter)
+app.use(cancelOrderRouter)
 
 
 // Route with no handlers for "all" methods: Not Found
