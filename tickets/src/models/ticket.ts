@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
 
 // An interface that describes the properties required 
 // to create a new Ticket
@@ -14,6 +15,7 @@ interface TicketDoc extends mongoose.Document{
   title: string;
   price: number;
   userId: string;
+  version: number;
 }
 
 // An interface that describes the properties/methods
@@ -41,10 +43,14 @@ const ticketSchema = new mongoose.Schema({
     transform(doc, ret){
       ret.id = ret._id;
       delete ret._id;
-      delete ret.__v;
     }
   }
 })
+
+// Plugin to manage automatic document version increment
+// Changed the default '__v' of mongoDB to 'version' instead
+ticketSchema.set('versionKey','version')
+ticketSchema.plugin(updateIfCurrentPlugin)
 
 // Use this build function to involve Typescript
 // and then calling new Ticket()

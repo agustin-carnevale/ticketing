@@ -2,7 +2,6 @@ import request from 'supertest'
 import { app } from '../../app'
 import { fakeSignin } from '../../test/auth_help'
 import { Ticket } from '../../models/ticket'
-import { Order, OrderStatus } from '../../models/order'
 import mongoose from 'mongoose'
 
 //user #1
@@ -16,6 +15,7 @@ const testUser2Id = '1DFD45G22'
 
 const buildTicket = async ()=>{
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 20
   })
