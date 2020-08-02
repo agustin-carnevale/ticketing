@@ -51,5 +51,4 @@ it('acks the message', async () => {
   //write assertions to make sure ack function was called
   expect(msg.ack).toHaveBeenCalled()
 
-
 })

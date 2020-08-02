@@ -1,7 +1,7 @@
 import express, {Request, Response} from 'express'
 import { Ticket } from '../models/ticket'
 import { body } from 'express-validator'
-import { requiereAuth, validateRequest, NotFoundError, NotAuthorizedError } from '@ac-tickets/common'
+import { requiereAuth, validateRequest, NotFoundError, NotAuthorizedError, BadRequestError } from '@ac-tickets/common'
 import { TicketUpdatedPublisher } from '../events/publishers/ticket_updated_publisher'
 import { natsWrapper } from '../nats_wrapper'
 
@@ -32,6 +32,10 @@ router.put('/api/tickets/:id',
   // has to be same user that created the ticket
   if( ticket.userId !== req.currentUser!.id){
     throw new NotAuthorizedError()
+  }
+
+  if(ticket.orderId){
+    throw new BadRequestError("Cannot edit a reserved ticket!")
   }
 
   //update ticket

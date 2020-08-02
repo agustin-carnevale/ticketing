@@ -2,6 +2,8 @@ import request from 'supertest'
 import { app } from '../../app'
 import { fakeSignin, generateObjectId} from '../../test/auth_help'
 import { natsWrapper } from '../../nats_wrapper'
+import { Ticket } from '../../models/ticket'
+import mongoose from 'mongoose'
 
 const testEmail = 'test@test.com'
 const testId = generateObjectId()
@@ -126,3 +128,27 @@ it('publishes an event of ticket:updated', async ()=>{
   expect(natsWrapper.client.publish).toHaveBeenCalled()
 })
 
+
+it('rejects updates if the ticket is reserved', async ()=>{
+  //create ticket
+  const res = await createTicket('concert', 40)
+
+
+  //mark the ticket as reserved (set an orderId)
+  const ticket = await Ticket.findById(res.body.id)
+  ticket!.set({ orderId: new mongoose.Types.ObjectId().toHexString()})
+  await ticket!.save()
+
+  const newTitle = 'New Title'
+  const newPrice = 25
+
+  //try to update the ticket
+  await request(app)
+  .put(`/api/tickets/${res.body.id}`)
+  .set('Cookie', fakeSignin(testEmail, testId))
+  .send({
+    title: newTitle,
+    price: newPrice
+  })
+  .expect(400)
+})
