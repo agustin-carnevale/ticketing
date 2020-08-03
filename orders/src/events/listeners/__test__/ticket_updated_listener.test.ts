@@ -15,7 +15,6 @@ const setup = async ()=>{
     title: 'live concert',
     price: 30
   })
-
   await ticket.save()
 
   //create a fake data event
