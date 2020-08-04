@@ -4,7 +4,7 @@ import { json } from 'body-parser'
 import cookieSession from 'cookie-session'
 
 //Routes
-
+import {createChargeRouter} from './routes/create_charge'
 
 // Middlewares, Errors
 import {errorHandler, NotFoundError, currentUser} from '@ac-tickets/common'
@@ -19,6 +19,7 @@ app.use(
   })
 )
 app.use(currentUser)
+app.use(createChargeRouter)
 
 
 // Route with no handlers for "all" methods: Not Found
