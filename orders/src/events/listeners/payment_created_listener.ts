@@ -11,7 +11,7 @@ export class PaymentCreatedListener extends Listener<PaymentCreatedEvent>{
   // When an order is paid Orders Service
   // will receive this event and mark the order as completed
   async onMessage(data: PaymentCreatedEvent['data'], msg: Message){
-    const order = await Order.findById(data.id)
+    const order = await Order.findById(data.orderId)
 
     if(!order){
       throw new Error('Order not found')
