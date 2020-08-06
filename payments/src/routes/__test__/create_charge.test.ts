@@ -108,44 +108,44 @@ it('returns 400 when the order is already cancelled', async ()=>{
 // Calling real Stripe API:
 // A different approach
 
-it('returns 201 with valid inputs, creates a stripe charge and saves payment to DB', async ()=>{
-  const price = Math.floor(Math.random() *100000)
-  //creates order as a user #1
-  const order = Order.build({
-   id: mongoose.Types.ObjectId().toHexString(),
-   userId: testUserId,
-   version: 0,
-   price,
-   status: OrderStatus.Created,
- })
- await order.save()
+// it('returns 201 with valid inputs, creates a stripe charge and saves payment to DB', async ()=>{
+//   const price = Math.floor(Math.random() *100000)
+//   //creates order as a user #1
+//   const order = Order.build({
+//    id: mongoose.Types.ObjectId().toHexString(),
+//    userId: testUserId,
+//    version: 0,
+//    price,
+//    status: OrderStatus.Created,
+//  })
+//  await order.save()
 
- //try to pay for the same order as user #1
- await request(app)
- .post('/api/payments')
- .set('Cookie', fakeSignin(testUserEmail, testUserId))
- .send({
-   token: 'tok_visa', //valid token for tests
-   orderId: order.id
- })
- .expect(201)
-
-
-  //Charge created in Stripe
-  const stripeCharges = await stripe.charges.list({limit: 10})
-  const stripeCharge = stripeCharges.data.find(charge => charge.amount === price*100)
-
-  expect(stripeCharge).toBeDefined()
-  expect(stripeCharge!.currency).toEqual('usd')
+//  //try to pay for the same order as user #1
+//  await request(app)
+//  .post('/api/payments')
+//  .set('Cookie', fakeSignin(testUserEmail, testUserId))
+//  .send({
+//    token: 'tok_visa', //valid token for tests
+//    orderId: order.id
+//  })
+//  .expect(201)
 
 
-  //Payment saved
-  const payment = await Payment.findOne({
-    orderId: order.id,
-    stripeChargeId: stripeCharge!.id
-  })
+//   //Charge created in Stripe
+//   const stripeCharges = await stripe.charges.list({limit: 10})
+//   const stripeCharge = stripeCharges.data.find(charge => charge.amount === price*100)
 
-  expect(payment).not.toBeNull()
-})
+//   expect(stripeCharge).toBeDefined()
+//   expect(stripeCharge!.currency).toEqual('usd')
+
+
+//   //Payment saved
+//   const payment = await Payment.findOne({
+//     orderId: order.id,
+//     stripeChargeId: stripeCharge!.id
+//   })
+
+//   expect(payment).not.toBeNull()
+// })
 
 
